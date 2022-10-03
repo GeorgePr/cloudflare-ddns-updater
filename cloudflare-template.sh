@@ -6,6 +6,7 @@ auth_method="token"                                 # Set to "global" for Global
 auth_key=""                                         # Your API Token or Global API Key
 zone_identifier=""                                  # Can be found in the "Overview" tab of your domain
 record_name=""                                      # Which record you want to be synced
+record_id=""                                        # Record ID
 ttl="3600"                                          # Set the DNS TTL (seconds)
 proxy="false"                                       # Set the proxy to true or false
 sitename=""                                         # Title of site "Example Site"
@@ -36,7 +37,7 @@ fi
 ###########################################
 ## Check and set the proper auth header
 ###########################################
-if [[ "${auth_method}" == "global" ]]; then
+if [[ "${auth_method}" == "token" ]]; then
   auth_header="X-Auth-Key:"
 else
   auth_header="Authorization: Bearer"
@@ -47,7 +48,7 @@ fi
 ###########################################
 
 logger "DDNS Updater: Check Initiated"
-record=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records?type=A&name=$record_name" \
+record=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_id" \
                       -H "X-Auth-Email: $auth_email" \
                       -H "$auth_header $auth_key" \
                       -H "Content-Type: application/json")
